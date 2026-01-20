@@ -124,7 +124,6 @@ The dataset contains four complementary tables representing different aggregatio
 
 ---
 
-
 ## 🔍 Key Insight Example
 
 Operational losses are not evenly distributed across the production timeline.  
