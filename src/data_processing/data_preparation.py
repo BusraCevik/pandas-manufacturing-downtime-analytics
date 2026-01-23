@@ -111,9 +111,6 @@ def prepare_data(raw_excel_path: str, cleaned_dir: str):
         ].head()
     )
 
-    # =========================================================
-    # Save cleaned outputs
-
     downtime_df.to_csv(cleaned_paths["downtime"], index=False)
     hourly_df.to_csv(cleaned_paths["hourly"], index=False)
     daily_df.to_csv(cleaned_paths["daily"], index=False)
