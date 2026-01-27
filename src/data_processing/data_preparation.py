@@ -111,9 +111,9 @@ def prepare_data(raw_excel_path: str, cleaned_dir: str):
         ].head()
     )
 
-   ''' downtime_df.to_csv(cleaned_paths["downtime"], index=False)
+   downtime_df.to_csv(cleaned_paths["downtime"], index=False)
     hourly_df.to_csv(cleaned_paths["hourly"], index=False)
     daily_df.to_csv(cleaned_paths["daily"], index=False)
     processed_df.to_csv(cleaned_paths["processed"], index=False)
 
-    print("✅ Data preparation completed.")'''
+    print("✅ Data preparation completed.")
