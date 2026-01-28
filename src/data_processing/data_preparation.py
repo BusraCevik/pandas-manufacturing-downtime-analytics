@@ -15,17 +15,19 @@ def _extract_clock(value):
     if pd.isna(value):
         return pd.NaT
 
-    # Already datetime.time
+    # If already pandas Timestamp
     if isinstance(value, pd.Timestamp):
         return value.time()
 
-    if hasattr(value, "hour"):
+    # If already datetime.time
+    if hasattr(value, "hour") and hasattr(value, "minute"):
         return value
 
     # Excel serial float (fraction of day)
     try:
-        seconds = float(value) * 24 * 60 * 60
-        return pd.to_datetime(seconds, unit="s").time()
+        # Excel stores time as fraction of a day
+        td = pd.to_timedelta(float(value), unit="D")
+        return (pd.Timestamp("1970-01-01") + td).time()
     except Exception:
         return pd.NaT
 
@@ -56,8 +58,13 @@ def prepare_data(raw_excel_path: str, cleaned_dir: str):
 
     processed_df["date"] = pd.to_datetime(processed_df["date"], errors="coerce")
 
-    processed_df["hour_start"] = processed_df["hour_start"].astype(int)
-    processed_df["hour_end"] = processed_df["hour_end"].astype(int)
+    # Safer conversion (NaN varsa patlamasın)
+    processed_df["hour_start"] = pd.to_numeric(
+        processed_df["hour_start"], errors="coerce"
+    )
+    processed_df["hour_end"] = pd.to_numeric(
+        processed_df["hour_end"], errors="coerce"
+    )
 
     processed_df["timestamp_start"] = (
         processed_df["date"] +
@@ -88,7 +95,8 @@ def prepare_data(raw_excel_path: str, cleaned_dir: str):
     daily_df["production_start_ts"] = daily_df.apply(
         lambda row: (
             pd.Timestamp.combine(row["date"], row["start_clock"])
-            if pd.notna(row["start_clock"]) else pd.NaT
+            if pd.notna(row["date"]) and pd.notna(row["start_clock"])
+            else pd.NaT
         ),
         axis=1
     )
@@ -96,10 +104,12 @@ def prepare_data(raw_excel_path: str, cleaned_dir: str):
     daily_df["production_end_ts"] = daily_df.apply(
         lambda row: (
             pd.Timestamp.combine(row["date"], row["end_clock"])
-            if pd.notna(row["end_clock"]) else pd.NaT
+            if pd.notna(row["date"]) and pd.notna(row["end_clock"])
+            else pd.NaT
         ),
         axis=1
     )
+
     daily_df["production_start_ts"] = daily_df["production_start_ts"].dt.floor("s")
     daily_df["production_end_ts"] = daily_df["production_end_ts"].dt.floor("s")
 
@@ -111,7 +121,10 @@ def prepare_data(raw_excel_path: str, cleaned_dir: str):
         ].head()
     )
 
-   downtime_df.to_csv(cleaned_paths["downtime"], index=False)
+    # -----------------------------
+    # Save cleaned files
+    # -----------------------------
+    downtime_df.to_csv(cleaned_paths["downtime"], index=False)
     hourly_df.to_csv(cleaned_paths["hourly"], index=False)
     daily_df.to_csv(cleaned_paths["daily"], index=False)
     processed_df.to_csv(cleaned_paths["processed"], index=False)
