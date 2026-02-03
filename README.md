@@ -13,6 +13,9 @@ This project answers questions such as:
 - How do micro-level downtime events propagate into hourly and daily performance losses?
 - How consistent are operational metrics across multiple aggregation layers?
 
+Also:
+- Before analyzing operational performance, the project validates the consistency of production data across event-level, hourly, and daily aggregation layers.
+
 ---
 
 ## 📌 Project Overview
