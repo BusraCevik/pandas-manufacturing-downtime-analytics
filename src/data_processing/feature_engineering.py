@@ -41,7 +41,7 @@ def build_downtime_features(cleaned_dir: str, featured_dir: str):
     ] = pd.NA
 
     df.to_csv(output_path, index=False)
-    print("✔ downtime_features.csv created")
+    print("downtime_features.csv created")
 
 
 # =========================================================
@@ -64,14 +64,17 @@ def build_hourly_features(cleaned_dir: str, featured_dir: str):
         parse_dates=["date", "timestamp_start", "timestamp_end"]
     )
 
-    # Core KPIs (hourly_cleaned kolonlarına birebir)
+    # Downtime ratio expresses the share of the monitored hour lost to downtime
     hourly_df["downtime_ratio"] = (
-        hourly_df["downtime_h"] / hourly_df["monitored_time_h"]
-    )
+            hourly_df["downtime_h"] / hourly_df["monitored_time_h"]
+    ).where(hourly_df["monitored_time_h"] > 0)
+
+    # Efficiency loss complements downtime_ratio by highlighting
+    # how much productive capacity was lost within the hour
+    hourly_df["efficiency_loss"] = 1 - hourly_df["efficiency"]
 
     hourly_df["zero_operation_flag"] = hourly_df["operation_time_h"] == 0
 
-    hourly_df["efficiency_loss"] = 1 - hourly_df["efficiency"]
 
     # Throughput (processed_hourly_cleaned)
     processed_df["hour_duration_sec"] = (
@@ -95,7 +98,7 @@ def build_hourly_features(cleaned_dir: str, featured_dir: str):
     hourly_df["weekday"] = hourly_df["timestamp_start"].dt.dayofweek
 
     hourly_df.to_csv(output_path, index=False)
-    print("✔ hourly_features.csv created")
+    print("hourly_features.csv created")
 
 
 # =========================================================
@@ -109,8 +112,18 @@ def build_daily_features(cleaned_dir: str, featured_dir: str):
 
     df = pd.read_csv(input_path, parse_dates=["date"])
 
+    # ---------------------------------------------------------
+    # Pause ratio represents the proportion of non-operational time.
+    # In this dataset, pause_ratio is mathematically equivalent to
+    # (1 - efficiency), since:
+    #   efficiency = operation_time / monitored_time
+    #   pause_ratio = pause_time / monitored_time
+    # Therefore, efficiency_loss is intentionally omitted to avoid
+    # redundant features and improve interpretability.
+    # ---------------------------------------------------------
     df["pause_ratio"] = df["pause_time_dec"] / df["monitored_time_dec"]
-    df["efficiency_loss"] = 1 - df["efficiency"]
+
+    #-> commented later on df["efficiency_loss"] = 1 - df["efficiency"]
     df["operation_pause_balance"] = (
         df["operation_time_dec"] - df["pause_time_dec"]
     )
@@ -121,7 +134,7 @@ def build_daily_features(cleaned_dir: str, featured_dir: str):
     )
 
     df.to_csv(output_path, index=False)
-    print("✔ daily_features.csv created")
+    print("daily_features.csv created")
 
 
 # =========================================================
@@ -170,7 +183,7 @@ def build_event_hour_reconciliation(cleaned_dir: str, featured_dir: str):
     )
 
     merged.to_csv(output_path, index=False)
-    print("✔ event_hour_reconciliation.csv created")
+    print("event_hour_reconciliation.csv created")
 
 
 # =========================================================
@@ -203,7 +216,7 @@ def build_hour_day_reconciliation(cleaned_dir: str, featured_dir: str):
     )
 
     merged.to_csv(output_path, index=False)
-    print("✔ hour_day_reconciliation.csv created")
+    print("hour_day_reconciliation.csv created")
 
 
 # =========================================================
@@ -218,4 +231,4 @@ def run_feature_pipeline(cleaned_dir: str, featured_dir: str):
     build_event_hour_reconciliation(cleaned_dir, featured_dir)
     build_hour_day_reconciliation(cleaned_dir, featured_dir)
 
-    print("🎉 Feature engineering pipeline completed successfully.")
+    print("Feature engineering pipeline completed successfully.")
