@@ -11,10 +11,8 @@ This project answers questions such as:
 - Where does downtime concentrate across the production timeline?
 - Which hours and operating windows suffer the highest inefficiencies?
 - How do micro-level downtime events propagate into hourly and daily performance losses?
-- How consistent are operational metrics across multiple aggregation layers? 
+- How consistent are operational metrics across multiple aggregation layers?
 
-Also:
-- Before analyzing operational performance, the project validates the consistency of production data across event-level, hourly, and daily aggregation layers.
 ---
 
 ## 📌 Project Overview
