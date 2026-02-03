@@ -1,5 +1,6 @@
 import os
 from src.data_processing.data_preparation import prepare_data
+from src.data_processing.feature_engineering import run_feature_pipeline
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
@@ -21,6 +22,11 @@ def main():
     prepare_data(
         raw_excel_path=RAW_EXCEL_PATH,
         cleaned_dir=CLEANED_DIR
+    )
+
+    run_feature_pipeline(
+        cleaned_dir=CLEANED_DIR,
+        featured_dir=FEATURED_DIR,
     )
 
 
