@@ -1,0 +1,5 @@
+metric,value
+median_duration_sec,90.0
+mean_duration_sec,342.1008645533141
+95th_percentile_duration_sec,824.2499999999939
+long_event_downtime_share,0.6277177804547254
