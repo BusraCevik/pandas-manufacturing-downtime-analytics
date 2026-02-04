@@ -94,4 +94,3 @@ def run_event_analysis_pipeline(featured_dir: str, output_dir: str):
         output_dir=output_dir
     )
 
-    print("Event-level analysis finished successfully.")
