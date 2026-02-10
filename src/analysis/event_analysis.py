@@ -83,6 +83,50 @@ def analyze_downtime_duration(featured_dir: str, output_dir: str):
     print(f"Saved: {summary_output_path}")
     print(f"Saved: {distribution_output_path}")
 
+def analyze_burst_behavior(featured_dir: str, output_dir: str):
+    """
+    Analyzes burst vs non-burst downtime behavior.
+
+    Produces a summary table showing:
+    - event count
+    - total downtime
+    - downtime share
+    """
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    input_path = os.path.join(featured_dir, "downtime_features.csv")
+    df = pd.read_csv(input_path)
+
+    duration_col = "downtime_duration_sec"
+
+    burst_summary = (
+        df
+        .groupby("is_burst", dropna=False)
+        .agg(
+            event_count=("is_burst", "count"),
+            total_downtime_sec=(duration_col, "sum")
+        )
+        .reset_index()
+    )
+
+    total_downtime = burst_summary["total_downtime_sec"].sum()
+
+    burst_summary["downtime_share"] = (
+        burst_summary["total_downtime_sec"] / total_downtime
+    )
+
+    output_path = os.path.join(
+        output_dir,
+        "downtime_burst_summary.csv"
+    )
+
+    burst_summary.to_csv(output_path, index=False)
+
+    print("\n--- Burst Analysis Completed ---")
+    print(burst_summary)
+    print(f"Saved: {output_path}")
+
 
 def run_event_analysis_pipeline(featured_dir: str, output_dir: str):
 
@@ -90,6 +134,10 @@ def run_event_analysis_pipeline(featured_dir: str, output_dir: str):
     print("\nStarting event-level downtime analysis...")
 
     analyze_downtime_duration(
+        featured_dir=featured_dir,
+        output_dir=output_dir
+    )
+    analyze_burst_behavior(
         featured_dir=featured_dir,
         output_dir=output_dir
     )
