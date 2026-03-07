@@ -2,7 +2,7 @@ import os
 from src.data_processing.data_preparation import prepare_data
 from src.data_processing.feature_engineering import run_feature_pipeline
 from src.analysis.event_analysis import run_event_analysis_pipeline
-
+from src.analysis.daily_analysis import run_daily_analysis_pipeline
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
@@ -36,7 +36,10 @@ def main():
         output_dir=TABLES_PATH,
     )
 
-
+    run_daily_analysis_pipeline(
+        featured_dir=FEATURED_DIR,
+        output_dir=TABLES_PATH,
+    )
 
 
 if __name__ == '__main__':
