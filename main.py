@@ -36,10 +36,7 @@ def main():
         output_dir=TABLES_PATH,
     )
 
-    run_daily_analysis_pipeline(
-        featured_dir=FEATURED_DIR,
-        output_dir=TABLES_PATH,
-    )
+
 
 
 if __name__ == '__main__':
