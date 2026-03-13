@@ -35,6 +35,10 @@ def main():
         featured_dir=FEATURED_DIR,
         output_dir=TABLES_PATH,
     )
+    run_daily_analysis_pipeline(
+        featured_dir=FEATURED_DIR,
+        output_dir=TABLES_PATH,
+    )
 
 
 
