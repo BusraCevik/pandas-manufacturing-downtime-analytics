@@ -169,5 +169,3 @@ def run_daily_analysis_pipeline(featured_dir: str, output_dir: str):
     analyze_pause_behavior(featured_dir, output_dir)
     analyze_operational_extremes(featured_dir, output_dir)
     analyze_operational_stability(featured_dir, output_dir)
-
-    print("\nDaily analysis pipeline completed.")
