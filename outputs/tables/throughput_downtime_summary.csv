@@ -1,0 +1,7 @@
+metric,value
+throughput_downtime_correlation,-0.6573484188789526
+mean_throughput_per_hour,227.7969348659004
+median_throughput_per_hour,219.0
+throughput_std,166.0516165991292
+high_downtime_hour_count,66.0
+high_downtime_threshold_ratio,0.7584633333333352

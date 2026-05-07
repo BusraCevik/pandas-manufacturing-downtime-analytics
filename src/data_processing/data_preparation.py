@@ -189,7 +189,6 @@ def prepare_data(raw_excel_path: str, cleaned_dir: str):
     hourly_df["timestamp_end"] = hourly_df["timestamp_end"].dt.floor("s")
 
     # ---- numeric cleanup (decimal comma → dot)
-    # Bu kolon isimlerini kendi dosyana göre uyarlayabilirsin
     numeric_cols = [
         "monitored_time",
         "operation_time",
@@ -205,7 +204,7 @@ def prepare_data(raw_excel_path: str, cleaned_dir: str):
             )
             hourly_df[col] = pd.to_numeric(hourly_df[col], errors="coerce")
 
-    # efficiency % ise temizle
+
     if "efficiency" in hourly_df.columns:
         hourly_df["efficiency"] = (
             hourly_df["efficiency"]

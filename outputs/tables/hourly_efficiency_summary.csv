@@ -1,0 +1,8 @@
+metric,value
+mean_efficiency,0.47310056271044676
+median_efficiency,0.5050672222222286
+min_efficiency,0.0
+max_efficiency,1.0
+efficiency_std,0.291707225203744
+zero_operation_hours,30.0
+zero_operation_share,0.11320754716981132
